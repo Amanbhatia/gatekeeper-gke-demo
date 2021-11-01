@@ -1,0 +1,36 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8snodeselector
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sNodeSelector
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            labels:
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+
+        package k8snodeselector
+        key1 := { k | input.review.object.spec.nodeSelector[k] }
+        key2 := { k | input.review.object.spec.template.spec.nodeSelector[k]  }
+        mykey := key1 | key2
+
+        violation[{"msg": msg}] {
+          provided := mykey
+          required := {label | label := input.parameters.labels[_].key}
+          missing := required - provided
+          count(missing) > 0
+          msg := "Missing nodeSelector label"
+        }

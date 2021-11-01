@@ -1,0 +1,26 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sNodeSelector
+metadata:
+  name: pod-has-nodepool-nodeselector
+spec:
+  # enforcementAction: warn
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment","Statefulset","ReplicaSet"]
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces:
+    - "kube-system"
+    - "cert-manager"
+    - "centralized-logging"
+    - "cloudtools"
+    - "consul"
+    - "gke-ingress"
+    - "kube-node-lease"
+    - "kube-public"
+    - "gatekeeper-system"
+    - "k8-proxy"
+  parameters:
+    labels:
+      - key: "node_pool"
