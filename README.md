@@ -39,7 +39,7 @@ Repository to host the gatekeeper and kubernetes demo scripts for Clearwater Dev
       **NOTE :** The constraint applied in the above steps checks for the label 'node_pool' as a key on the node (compute instance) of the cluster which should match the key of NodeSelector parameter in deployment file.
     
 4. Deploying pod(with missing nodeselector) with constraint present in cluster.
-   * Now delete the existing deployment (deployed through devon.yaml) and re-deploy it.
+   * Now delete the existing deployment (deployed through devcon.yaml) and re-deploy it.
        ```
        kubectl delete -f devcon.yaml
        kubectl apply -f devcon.yaml
